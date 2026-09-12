@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Sidebar from './components/Sidebar'
+import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Vendas from './pages/Vendas'
 import Clientes from './pages/Clientes'
@@ -11,65 +12,93 @@ import Caixa from './pages/Caixa'
 import Relatorios from './pages/Relatorios'
 import './App.css'
 
+// Só deixa passar quem já fez login (tem token guardado).
+// Sem token, manda direto pra tela de login.
+function RotaProtegida({ children }) {
+  const logado = !!localStorage.getItem('token')
+
+  if (!logado) {
+    return <Navigate to="/login" replace />
+  }
+
+  return children
+}
+
 function App() {
   return (
     <BrowserRouter>
-      <div className="app-container">
+      <Routes>
 
-        <Sidebar />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-        <main className="main-content">
-          <Routes>
+        <Route
+          path="/*"
+          element={
+            <RotaProtegida>
+              <div className="app-container">
 
-            <Route
-              path="/"
-              element={<Dashboard />}
-            />
+                <Sidebar />
 
-            <Route
-              path="/vendas"
-              element={<Vendas />}
-            />
+                <main className="main-content">
+                  <Routes>
 
-            <Route
-              path="/clientes"
-              element={<Clientes />}
-            />
+                    <Route
+                      path="/"
+                      element={<Dashboard />}
+                    />
 
-            <Route
-              path="/produtos"
-              element={<Produtos />}
-            />
+                    <Route
+                      path="/vendas"
+                      element={<Vendas />}
+                    />
 
-            <Route
-              path="/sabores"
-              element={<Sabores />}
-            />
+                    <Route
+                      path="/clientes"
+                      element={<Clientes />}
+                    />
 
-            <Route
-              path="/ingredientes"
-              element={<Ingredientes />}
-            />
+                    <Route
+                      path="/produtos"
+                      element={<Produtos />}
+                    />
 
-            <Route
-              path="/receitas"
-              element={<Receitas />}
-            />
+                    <Route
+                      path="/sabores"
+                      element={<Sabores />}
+                    />
 
-            <Route
-              path="/caixa"
-              element={<Caixa />}
-            />
+                    <Route
+                      path="/ingredientes"
+                      element={<Ingredientes />}
+                    />
 
-            <Route
-              path="/relatorios"
-              element={<Relatorios />}
-            />
+                    <Route
+                      path="/receitas"
+                      element={<Receitas />}
+                    />
 
-          </Routes>
-        </main>
+                    <Route
+                      path="/caixa"
+                      element={<Caixa />}
+                    />
 
-      </div>
+                    <Route
+                      path="/relatorios"
+                      element={<Relatorios />}
+                    />
+
+                  </Routes>
+                </main>
+
+              </div>
+            </RotaProtegida>
+          }
+        />
+
+      </Routes>
     </BrowserRouter>
   )
 }

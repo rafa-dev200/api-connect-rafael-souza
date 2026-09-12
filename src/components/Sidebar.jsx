@@ -1,7 +1,21 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.jpg'
+import { apiFetch } from '../config/api'
 
 function Sidebar() {
+  const navigate = useNavigate()
+
+  async function sair() {
+    try {
+      await apiFetch('/auth/logout', { method: 'POST' })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      localStorage.removeItem('token')
+      navigate('/login')
+    }
+  }
+
   const menuItems = [
     { nome: 'Dashboard', icone: '📊', caminho: '/' },
     { nome: 'Vendas', icone: '🛒', caminho: '/vendas' },
@@ -49,6 +63,11 @@ function Sidebar() {
           </NavLink>
         ))}
       </nav>
+
+      <button className="menu-item logout-button" onClick={sair}>
+        <span className="menu-icon">🚪</span>
+        <span className="menu-name">Sair</span>
+      </button>
 
       <div className="sidebar-footer">
         <p>Versão 1.0</p>

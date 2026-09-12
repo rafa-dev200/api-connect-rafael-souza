@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { apiFetch } from '../config/api'
 
 // Página de Receitas (Ficha Técnica)
 // Cada receita tem uma lista de itens (ingrediente + quantidade usada) e um rendimento.
@@ -38,9 +39,9 @@ function Receitas() {
       setCarregando(true)
 
       const [respostaReceitas, respostaIngredientes, respostaSabores] = await Promise.all([
-        fetch('http://localhost:8080/receitas'),
-        fetch('http://localhost:8080/ingredientes'),
-        fetch('http://localhost:8080/sabores')
+        apiFetch(`/receitas`),
+        apiFetch(`/ingredientes`),
+        apiFetch(`/sabores`)
       ])
 
       if (!respostaReceitas.ok) throw new Error('Erro ao buscar receitas')
@@ -148,8 +149,8 @@ function Receitas() {
 
     try {
       const url = receitaEditando
-        ? `http://localhost:8080/receitas/${receitaEditando.id}`
-        : 'http://localhost:8080/receitas'
+        ? `/receitas/${receitaEditando.id}`
+        : `/receitas`
 
       const metodo = receitaEditando ? 'PUT' : 'POST'
 
@@ -167,7 +168,7 @@ function Receitas() {
         }))
       }
 
-      const resposta = await fetch(url, {
+      const resposta = await apiFetch(url, {
         method: metodo,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -193,7 +194,7 @@ function Receitas() {
 
   async function confirmarExclusao() {
     try {
-      const resposta = await fetch(`http://localhost:8080/receitas/${confirmandoExclusao.id}`, {
+      const resposta = await apiFetch(`/receitas/${confirmandoExclusao.id}`, {
         method: 'DELETE'
       })
 

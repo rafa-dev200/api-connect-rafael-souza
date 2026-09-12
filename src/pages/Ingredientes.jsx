@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { apiFetch } from '../config/api'
 
 // Página de Ingredientes
 // O backend só guarda o que foi comprado (quantidade, unidade, preço da embalagem).
@@ -31,7 +32,7 @@ function Ingredientes() {
   async function buscarIngredientes() {
     try {
       setCarregando(true)
-      const resposta = await fetch('http://localhost:8080/ingredientes')
+      const resposta = await apiFetch(`/ingredientes`)
       if (!resposta.ok) throw new Error('Erro ao buscar ingredientes')
       const dados = await resposta.json()
       setIngredientes(dados)
@@ -90,8 +91,8 @@ function Ingredientes() {
 
     try {
       const url = ingredienteEditando
-        ? `http://localhost:8080/ingredientes/${ingredienteEditando.id}`
-        : 'http://localhost:8080/ingredientes'
+        ? `/ingredientes/${ingredienteEditando.id}`
+        : `/ingredientes`
 
       const metodo = ingredienteEditando ? 'PUT' : 'POST'
 
@@ -102,7 +103,7 @@ function Ingredientes() {
         precoEmbalagem: Number(form.precoEmbalagem)
       }
 
-      const resposta = await fetch(url, {
+      const resposta = await apiFetch(url, {
         method: metodo,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -128,7 +129,7 @@ function Ingredientes() {
 
   async function confirmarExclusao() {
     try {
-      const resposta = await fetch(`http://localhost:8080/ingredientes/${confirmandoExclusao.id}`, {
+      const resposta = await apiFetch(`/ingredientes/${confirmandoExclusao.id}`, {
         method: 'DELETE'
       })
 

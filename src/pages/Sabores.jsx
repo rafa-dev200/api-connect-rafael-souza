@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { apiFetch } from '../config/api'
 
 // Página de Sabores
 // Cada sabor pertence a um produto (relação @ManyToOne no backend)
@@ -34,9 +35,9 @@ function Sabores() {
       setCarregando(true)
 
       const [respostaSabores, respostaProdutos, respostaReceitas] = await Promise.all([
-        fetch('http://localhost:8080/sabores'),
-        fetch('http://localhost:8080/produtos'),
-        fetch('http://localhost:8080/receitas')
+        apiFetch(`/sabores`),
+        apiFetch(`/produtos`),
+        apiFetch(`/receitas`)
       ])
 
       if (!respostaSabores.ok) throw new Error('Erro ao buscar sabores')
@@ -104,8 +105,8 @@ function Sabores() {
 
     try {
       const url = saborEditando
-        ? `http://localhost:8080/sabores/${saborEditando.id}`
-        : 'http://localhost:8080/sabores'
+        ? `/sabores/${saborEditando.id}`
+        : `/sabores`
 
       const metodo = saborEditando ? 'PUT' : 'POST'
 
@@ -116,7 +117,7 @@ function Sabores() {
         produto: { id: Number(form.produtoId) }
       }
 
-      const resposta = await fetch(url, {
+      const resposta = await apiFetch(url, {
         method: metodo,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -142,7 +143,7 @@ function Sabores() {
 
   async function confirmarExclusao() {
     try {
-      const resposta = await fetch(`http://localhost:8080/sabores/${confirmandoExclusao.id}`, {
+      const resposta = await apiFetch(`/sabores/${confirmandoExclusao.id}`, {
         method: 'DELETE'
       })
 

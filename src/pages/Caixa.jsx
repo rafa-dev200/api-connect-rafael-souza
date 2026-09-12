@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { apiFetch } from '../config/api'
 
 // Página de Caixa
 // O backend já calcula um resumo financeiro completo em /caixa/resumo (saldo, a receber, despesas...).
@@ -32,8 +33,8 @@ function Caixa() {
       setCarregando(true)
 
       const [respostaMovimentacoes, respostaResumo] = await Promise.all([
-        fetch('http://localhost:8080/caixa'),
-        fetch('http://localhost:8080/caixa/resumo')
+        apiFetch(`/caixa`),
+        apiFetch(`/caixa/resumo`)
       ])
 
       if (!respostaMovimentacoes.ok) throw new Error('Erro ao buscar movimentações')
@@ -96,7 +97,7 @@ function Caixa() {
         formaPagamento: form.formaPagamento
       }
 
-      const resposta = await fetch('http://localhost:8080/caixa', {
+      const resposta = await apiFetch(`/caixa`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -124,7 +125,7 @@ function Caixa() {
 
   async function confirmarExclusao() {
     try {
-      const resposta = await fetch(`http://localhost:8080/caixa/${confirmandoExclusao.id}`, {
+      const resposta = await apiFetch(`/caixa/${confirmandoExclusao.id}`, {
         method: 'DELETE'
       })
 

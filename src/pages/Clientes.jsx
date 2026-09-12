@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { apiFetch } from '../config/api'
 
 // Componente da página de Clientes
 // Segue o mesmo padrão visual e de conexão com o backend usado em Vendas.jsx
@@ -31,7 +32,7 @@ function Clientes() {
   async function buscarClientes() {
     try {
       setCarregando(true)
-      const resposta = await fetch('http://localhost:8080/clientes')
+      const resposta = await apiFetch(`/clientes`)
       if (!resposta.ok) throw new Error('Erro ao buscar clientes')
       const dados = await resposta.json()
       setClientes(dados)
@@ -79,12 +80,12 @@ function Clientes() {
     try {
       // Se estiver editando, usa PUT no cliente específico. Se for novo, usa POST.
       const url = clienteEditando
-        ? `http://localhost:8080/clientes/${clienteEditando.id}`
-        : 'http://localhost:8080/clientes'
+        ? `/clientes/${clienteEditando.id}`
+        : `/clientes`
 
       const metodo = clienteEditando ? 'PUT' : 'POST'
 
-      const resposta = await fetch(url, {
+      const resposta = await apiFetch(url, {
         method: metodo,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -110,7 +111,7 @@ function Clientes() {
 
   async function confirmarExclusao() {
     try {
-      const resposta = await fetch(`http://localhost:8080/clientes/${confirmandoExclusao.id}`, {
+      const resposta = await apiFetch(`/clientes/${confirmandoExclusao.id}`, {
         method: 'DELETE'
       })
 

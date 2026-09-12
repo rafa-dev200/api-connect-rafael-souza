@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { apiFetch } from '../config/api'
 
 // Página de Produtos
 // Cada produto pode ter vários sabores (relacionamento feito no backend pela entidade Sabor)
@@ -32,8 +33,8 @@ function Produtos() {
       setCarregando(true)
 
       const [respostaProdutos, respostaSabores] = await Promise.all([
-        fetch('http://localhost:8080/produtos'),
-        fetch('http://localhost:8080/sabores')
+        apiFetch(`/produtos`),
+        apiFetch(`/sabores`)
       ])
 
       if (!respostaProdutos.ok) throw new Error('Erro ao buscar produtos')
@@ -84,12 +85,12 @@ function Produtos() {
 
     try {
       const url = produtoEditando
-        ? `http://localhost:8080/produtos/${produtoEditando.id}`
-        : 'http://localhost:8080/produtos'
+        ? `/produtos/${produtoEditando.id}`
+        : `/produtos`
 
       const metodo = produtoEditando ? 'PUT' : 'POST'
 
-      const resposta = await fetch(url, {
+      const resposta = await apiFetch(url, {
         method: metodo,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -115,7 +116,7 @@ function Produtos() {
 
   async function confirmarExclusao() {
     try {
-      const resposta = await fetch(`http://localhost:8080/produtos/${confirmandoExclusao.id}`, {
+      const resposta = await apiFetch(`/produtos/${confirmandoExclusao.id}`, {
         method: 'DELETE'
       })
 

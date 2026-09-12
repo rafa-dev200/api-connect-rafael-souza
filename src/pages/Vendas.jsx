@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { apiFetch } from '../config/api'
 
 function Vendas() {
 
@@ -39,11 +40,11 @@ function Vendas() {
         respostaSabores
       ] = await Promise.all([
 
-        fetch('http://localhost:8080/vendas'),
+        apiFetch(`/vendas`),
 
-        fetch('http://localhost:8080/clientes'),
+        apiFetch(`/clientes`),
 
-        fetch('http://localhost:8080/sabores')
+        apiFetch(`/sabores`)
 
       ])
 
@@ -242,8 +243,8 @@ function Vendas() {
       )
 
 
-      const resposta = await fetch(
-        'http://localhost:8080/vendas',
+      const resposta = await apiFetch(
+        `/vendas`,
         {
           method: 'POST',
 

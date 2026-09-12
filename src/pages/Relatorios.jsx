@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { apiFetch } from '../config/api'
 
 // Página de Relatórios
 // Todo o cálculo já é feito no backend (/relatorios/*) — aqui só buscamos e exibimos.
@@ -40,12 +41,12 @@ function Relatorios() {
         respostaVendasPorProduto,
         respostaGastosPorCliente
       ] = await Promise.all([
-        fetch('http://localhost:8080/relatorios/sabor-mais-vendido'),
-        fetch('http://localhost:8080/relatorios/produto-mais-vendido'),
-        fetch('http://localhost:8080/relatorios/cliente-que-mais-compra'),
-        fetch('http://localhost:8080/relatorios/sabores'),
-        fetch('http://localhost:8080/relatorios/produtos'),
-        fetch('http://localhost:8080/relatorios/clientes')
+        apiFetch(`/relatorios/sabor-mais-vendido`),
+        apiFetch(`/relatorios/produto-mais-vendido`),
+        apiFetch(`/relatorios/cliente-que-mais-compra`),
+        apiFetch(`/relatorios/sabores`),
+        apiFetch(`/relatorios/produtos`),
+        apiFetch(`/relatorios/clientes`)
       ])
 
       if (!respostaSaborMaisVendido.ok) throw new Error('Erro ao buscar sabor mais vendido')
@@ -74,8 +75,8 @@ function Relatorios() {
     try {
       setCarregandoPeriodo(true)
 
-      const resposta = await fetch(
-        `http://localhost:8080/relatorios/periodo?inicio=${inicio}&fim=${fim}`
+      const resposta = await apiFetch(
+        `/relatorios/periodo?inicio=${inicio}&fim=${fim}`
       )
 
       if (!resposta.ok) throw new Error('Erro ao buscar resumo do período')
